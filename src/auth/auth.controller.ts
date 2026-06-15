@@ -24,8 +24,14 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Create an email account and return JWT tokens' })
-  register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto);
+  async register(@Body() dto: RegisterDto) {
+    const payload = await this.authService.register(dto);
+    return {
+      statusCode: HttpStatus.CREATED,
+      success: true,
+      message: 'Account created successfully',
+      ...payload,
+    };
   }
 
   @Post('login')
@@ -33,8 +39,14 @@ export class AuthController {
   @ApiOperation({
     summary: 'Authenticate with email + password, return access + refresh tokens',
   })
-  login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  async login(@Body() dto: LoginDto) {
+    const payload = await this.authService.login(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Logged in successfully',
+      ...payload,
+    };
   }
 
   @Post('refresh')

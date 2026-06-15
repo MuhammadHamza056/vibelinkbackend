@@ -2,8 +2,6 @@
 import 'reflect-metadata';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import * as bcrypt from 'bcryptjs';
-import { UserSchema } from '../users/schemas/user.schema';
 import { ChallengeSchema } from '../challenges/schemas/challenge.schema';
 import {
   ChallengeCategory,
@@ -85,7 +83,6 @@ async function main() {
   await mongoose.connect(uri);
   console.log('Connected to MongoDB');
 
-  const User = mongoose.model('User', UserSchema);
   const Challenge = mongoose.model('Challenge', ChallengeSchema);
 
   const challengeCount = await Challenge.countDocuments();
@@ -94,23 +91,6 @@ async function main() {
     console.log(`Seeded ${CHALLENGES.length} challenges`);
   } else {
     console.log(`Challenges already present (${challengeCount}); skipping`);
-  }
-
-  const demoEmail = 'demo@vibelink.app';
-  const existing = await User.findOne({ email: demoEmail });
-  if (!existing) {
-    const passwordHash = await bcrypt.hash('password123', 10);
-    await User.create({
-      email: demoEmail,
-      username: 'demo',
-      passwordHash,
-      vibeTags: ['Creative', 'Foodie', 'Chill'],
-      xp: 1450,
-      level: 2,
-    });
-    console.log(`Seeded demo user: ${demoEmail} / password123`);
-  } else {
-    console.log('Demo user already exists; skipping');
   }
 
   await mongoose.disconnect();

@@ -8,7 +8,15 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.enableCors({ origin: true, credentials: true });
+  // `origin: true` reflects the request's Origin header, so any client is
+  // allowed. Native Flutter (Android/iOS) ignores CORS entirely; this matters
+  // only for Flutter Web running in a browser.
+  app.enableCors({
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
