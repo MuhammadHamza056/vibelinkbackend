@@ -26,7 +26,7 @@ export class HomeService {
     const level = levelFromXp(user.xp);
 
     const [available, recentMemories] = await Promise.all([
-      this.challengesService.findAll({}),
+      this.challengesService.findAll(userId, {}),
       this.memoriesService.findMine(userId),
     ]);
 

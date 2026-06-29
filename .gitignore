@@ -20,5 +20,8 @@ yarn-error.log*
 .vscode/*
 !.vscode/extensions.json
 
+# uploaded files (avatars, etc.)
+/uploads
+
 # misc
 *.tsbuildinfo

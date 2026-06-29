@@ -23,8 +23,11 @@ export class ChallengesController {
 
   @Get()
   @ApiOperation({ summary: 'List active challenges, optionally filtered' })
-  findAll(@Query() query: QueryChallengesDto) {
-    return this.challengesService.findAll(query);
+  findAll(
+    @CurrentUser('userId') userId: string,
+    @Query() query: QueryChallengesDto,
+  ) {
+    return this.challengesService.findAll(userId, query);
   }
 
   @Post()
@@ -35,9 +38,8 @@ export class ChallengesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single challenge by id' })
-  async findOne(@Param('id') id: string) {
-    const challenge = await this.challengesService.findById(id);
-    return challenge.toJSON();
+  findOne(@CurrentUser('userId') userId: string, @Param('id') id: string) {
+    return this.challengesService.findOneForUser(userId, id);
   }
 
   @Post(':id/start')

@@ -69,3 +69,9 @@ export enum AuthProvider {
   google = 'google',
   apple = 'apple',
 }
+
+export enum ConnectionStatus {
+  pending = 'pending',
+  accepted = 'accepted',
+  rejected = 'rejected',
+}

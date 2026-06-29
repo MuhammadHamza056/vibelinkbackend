@@ -12,6 +12,7 @@ import { ChallengesModule } from './challenges/challenges.module';
 import { MemoriesModule } from './memories/memories.module';
 import { MatchModule } from './match/match.module';
 import { HomeModule } from './home/home.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { HomeModule } from './home/home.module';
     MemoriesModule,
     MatchModule,
     HomeModule,
+    NotificationsModule,
   ],
   providers: [
     {
