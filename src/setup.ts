@@ -49,7 +49,16 @@ export function configureApp(app: NestExpressApplication) {
     .addTag('notifications')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  // On Vercel's serverless runtime the Swagger UI static assets (CSS/JS) are
+  // not served by the function, so the default relative asset URLs 404 and
+  // `SwaggerUIBundle` never loads. Point the UI at a CDN instead.
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: { persistAuthorization: true },
+    customCssUrl:
+      'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css',
+    customJs: [
+      'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js',
+      'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js',
+    ],
   });
 }
