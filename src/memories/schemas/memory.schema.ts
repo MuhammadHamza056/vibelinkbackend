@@ -17,10 +17,6 @@ export class Memory {
   @Prop({ default: '' })
   imageUrl: string;
 
-  // Optional link back to the challenge that inspired the memory.
-  @Prop({ type: Types.ObjectId, ref: 'Challenge', default: undefined })
-  challengeId?: Types.ObjectId;
-
   @Prop({ type: [String], default: [] })
   vibeTags: string[];
 }

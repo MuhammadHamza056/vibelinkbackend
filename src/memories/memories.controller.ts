@@ -5,13 +5,25 @@ import {
   Get,
   Param,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
+import {
+  memoryMulterOptions,
+  UploadedImage,
+} from './memory-upload.config';
 
 @ApiTags('memories')
 @ApiBearerAuth()
@@ -28,11 +40,14 @@ export class MemoriesController {
 
   @Post()
   @ApiOperation({ summary: 'Save a new memory' })
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @UseInterceptors(FileInterceptor('image', memoryMulterOptions))
   create(
     @CurrentUser('userId') userId: string,
     @Body() dto: CreateMemoryDto,
+    @UploadedFile() image?: UploadedImage,
   ) {
-    return this.memoriesService.create(userId, dto);
+    return this.memoriesService.create(userId, dto, image);
   }
 
   @Get(':id')

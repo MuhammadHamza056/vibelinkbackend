@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(ngrok http *)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST -H \"Content-Type: application/json\" -H \"ngrok-skip-browser-warning: true\" https://3105-221-132-118-98.ngrok-free.app/api/auth/login -d '{}')"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST -H \"Content-Type: application/json\" -H \"ngrok-skip-browser-warning: true\" https://3105-221-132-118-98.ngrok-free.app/api/auth/login -d '{}')",
+      "Bash(npx tsc *)"
     ]
   }
 }
