@@ -21,7 +21,10 @@ import {
 } from '../common/constants/app.constants';
 
 // Shape returned for any user embedded in a match/connection response.
-type UserSummary = Pick<User, 'username' | 'avatarUrl' | 'level' | 'vibeTags'> & {
+type UserSummary = Pick<
+  User,
+  'username' | 'avatarUrl' | 'level' | 'vibeTags' | 'safetyPulseEnabled'
+> & {
   id: string;
 };
 
@@ -51,6 +54,7 @@ export class MatchService {
       avatarUrl: u.avatarUrl,
       level: u.level,
       vibeTags: u.vibeTags,
+      safetyPulseEnabled: u.safetyPulseEnabled ?? false,
     };
   }
 

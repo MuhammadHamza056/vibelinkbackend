@@ -52,6 +52,7 @@ export class HomeService {
         avatarUrl: user.avatarUrl,
         xp: user.xp,
         streakDays: user.streakDays,
+        safetyPulseEnabled: user.safetyPulseEnabled ?? false,
       },
       leveling: {
         level,

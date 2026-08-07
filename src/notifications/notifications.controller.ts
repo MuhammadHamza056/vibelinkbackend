@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -11,6 +12,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { NotificationsService } from './notifications.service';
+import { EmergencyAlertDto } from './dto/emergency-alert.dto';
 
 @ApiTags('notifications')
 @ApiBearerAuth()
@@ -27,6 +29,18 @@ export class NotificationsController {
   })
   findMine(@CurrentUser('userId') userId: string) {
     return this.notificationsService.findMine(userId);
+  }
+
+  @Post('emergency')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Trigger emergency SOS alert notification to trusted contacts',
+  })
+  sendEmergency(
+    @CurrentUser('userId') userId: string,
+    @Body() dto: EmergencyAlertDto,
+  ) {
+    return this.notificationsService.sendEmergencyAlert(userId, dto);
   }
 
   @Post(':id/accept')
@@ -53,3 +67,4 @@ export class NotificationsController {
     return this.notificationsService.reject(userId, id);
   }
 }
+
