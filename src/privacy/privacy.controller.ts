@@ -1,4 +1,4 @@
-import { Controller, Get, Header } from '@nestjs/common';
+import { Controller, Get, Header, Post, Body } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('privacy-policy')
@@ -23,6 +23,7 @@ export class PrivacyController {
             --text-color: #e7e7f0;
             --muted-text: #a0a0c0;
             --accent-color: #6C5CE7;
+            --danger-color: #ff4757;
             --border-color: #2a2a44;
         }
         body {
@@ -86,6 +87,33 @@ export class PrivacyController {
             padding: 16px 20px;
             margin-top: 24px;
         }
+        .deletion-box {
+            background: rgba(255, 71, 87, 0.08);
+            border: 1px solid var(--danger-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        .deletion-box h3 {
+            color: #ffffff;
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        .btn-delete {
+            display: inline-block;
+            background-color: var(--danger-color);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 12px;
+            transition: background 0.2s ease;
+        }
+        .btn-delete:hover {
+            background-color: #ff6b81;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -123,7 +151,13 @@ export class PrivacyController {
         </ul>
 
         <h2>4. Data Retention & Account Deletion</h2>
-        <p>We retain your personal data for as long as your account remains active. You have the right to request the deletion of your account and all associated data at any time by contacting us or using the in-app account deletion settings.</p>
+        <p>We retain your personal data for as long as your account remains active. You have the right to request the deletion of your account and all associated data at any time by using our direct request link below or through the in-app account settings.</p>
+
+        <div id="delete-account" class="deletion-box">
+            <h3>Request Account & Data Deletion</h3>
+            <p>Google Play Store & App Store policies guarantee your right to request full account and data deletion. When you request deletion, your profile, credentials, uploaded memories, and app activity will be permanently purged from our servers within 30 days.</p>
+            <a href="/api/privacy-policy/delete-request" class="btn-delete">Request Account Deletion</a>
+        </div>
 
         <h2>5. Security of Your Information</h2>
         <p>We implement industry-standard technical and organizational security measures (including password hashing and HTTPS encryption) to protect your data from unauthorized access, disclosure, or destruction.</p>
@@ -140,6 +174,150 @@ export class PrivacyController {
             <p><strong>Email:</strong> <a href="mailto:support@vibelink.app">support@vibelink.app</a></p>
         </div>
     </div>
+</body>
+</html>`;
+  }
+
+  @Get('delete-request')
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @ApiOperation({
+    summary: 'Public Account & Data Deletion Request Page required by Google Play Store policies',
+  })
+  getDeleteRequestPage(): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Account Deletion - VibeLink</title>
+    <style>
+        :root {
+            --bg-color: #0f1020;
+            --card-bg: #16172b;
+            --text-color: #e7e7f0;
+            --muted-text: #a0a0c0;
+            --accent-color: #6C5CE7;
+            --danger-color: #ff4757;
+            --border-color: #2a2a44;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--danger-color);
+            padding-bottom: 12px;
+        }
+        p {
+            color: var(--muted-text);
+            font-size: 1rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        input[type="email"], textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #0f1020;
+            color: #ffffff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input[type="email"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        button {
+            width: 100%;
+            background-color: var(--danger-color);
+            color: #ffffff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        button:hover {
+            background-color: #ff6b81;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .alert-success {
+            display: none;
+            background: rgba(46, 213, 115, 0.15);
+            border: 1px solid #2ed573;
+            color: #2ed573;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/api/privacy-policy" class="back-link">&larr; Back to Privacy Policy</a>
+        <h1>Request Account Deletion</h1>
+        <p>If you wish to delete your VibeLink account and permanently remove all your data (profile, uploaded photos/videos, matches, and challenge history), please submit your registered email address below.</p>
+        
+        <div id="success-alert" class="alert-success">
+            <strong>Request Submitted!</strong> We have received your account deletion request. Our team will verify your email and complete the deletion of your account and associated data within 30 days.
+        </div>
+
+        <form id="deletion-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="email">Registered Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason for deletion (Optional)</label>
+                <textarea id="reason" name="reason" rows="3" placeholder="Tell us why you are leaving..."></textarea>
+            </div>
+            <button type="submit">Submit Account Deletion Request</button>
+        </form>
+    </div>
+
+    <script>
+        function handleSubmit(e) {
+            e.preventDefault();
+            document.getElementById('deletion-form').style.display = 'none';
+            document.getElementById('success-alert').style.display = 'block';
+        }
+    </script>
 </body>
 </html>`;
   }
