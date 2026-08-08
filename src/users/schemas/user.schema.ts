@@ -92,6 +92,10 @@ export class User {
   @Prop({ type: [String], default: [] })
   activeChallengeIds: string[];
 
+  // IDs of challenges the user has completed.
+  @Prop({ type: [String], default: [] })
+  completedChallengeIds: string[];
+
   @Prop({ type: GeoPointSchema, default: undefined })
   location?: GeoPoint;
 }

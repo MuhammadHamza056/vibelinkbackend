@@ -44,6 +44,7 @@ export class ChallengesService {
   }
 
   async findAll(userId: string, query: QueryChallengesDto) {
+    const user = await this.usersService.findById(userId);
     const filter: Record<string, unknown> = { isActive: true };
     if (query.category) filter.category = query.category;
     if (query.difficulty) filter.difficulty = query.difficulty;
@@ -56,7 +57,27 @@ export class ChallengesService {
       userId,
       challenges.map((c) => c.id),
     );
-    return challenges.map((c) => this.withSharedPartners(c, partners));
+    return challenges.map((c) =>
+      this.withUserStatusAndPartners(c, user, partners),
+    );
+  }
+
+  async findCompletedForUser(userId: string) {
+    const user = await this.usersService.findById(userId);
+    const completedIds = user.completedChallengeIds ?? [];
+    if (!completedIds.length) return [];
+
+    const challenges = await this.challengeModel
+      .find({ _id: { $in: completedIds } })
+      .exec();
+
+    const partners = await this.sharedPartnersFor(
+      userId,
+      challenges.map((c) => c.id),
+    );
+    return challenges.map((c) =>
+      this.withUserStatusAndPartners(c, user, partners),
+    );
   }
 
   async findById(id: string): Promise<ChallengeDocument> {
@@ -65,11 +86,12 @@ export class ChallengesService {
     return challenge;
   }
 
-  // Single challenge annotated with the partner(s) you share it with.
+  // Single challenge annotated with user status & partner(s) you share it with.
   async findOneForUser(userId: string, id: string) {
     const challenge = await this.findById(id);
+    const user = await this.usersService.findById(userId);
     const partners = await this.sharedPartnersFor(userId, [challenge.id]);
-    return this.withSharedPartners(challenge, partners);
+    return this.withUserStatusAndPartners(challenge, user, partners);
   }
 
   // Maps challengeId -> partners the user is doing that challenge together with.
@@ -112,14 +134,25 @@ export class ChallengesService {
     return map;
   }
 
-  // Attaches a `sharedWith` array (empty when not shared) to a challenge's JSON.
-  private withSharedPartners(
+  // Attaches `sharedWith`, `isCompleted`, and `inProgress` to a challenge's JSON output.
+  private withUserStatusAndPartners(
     challenge: ChallengeDocument,
+    user: UserDocument,
     partners: Record<string, SharedPartner[]>,
   ): Record<string, any> {
     const sharedWith = partners[challenge.id] ?? [];
     const json = challenge.toJSON() as Record<string, any>;
-    return { ...json, isShared: sharedWith.length > 0, sharedWith };
+    const isCompleted =
+      user.completedChallengeIds?.includes(challenge.id) ?? false;
+    const inProgress =
+      user.activeChallengeIds?.includes(challenge.id) ?? false;
+    return {
+      ...json,
+      isShared: sharedWith.length > 0,
+      sharedWith,
+      isCompleted,
+      inProgress,
+    };
   }
 
   // Picks the active challenge that best fits two users' combined vibe tags,
@@ -152,7 +185,10 @@ export class ChallengesService {
     }
     user.activeChallengeIds.push(challenge.id);
     await user.save();
-    return { challenge: challenge.toJSON(), activeChallengeIds: user.activeChallengeIds };
+    return {
+      challenge: this.withUserStatusAndPartners(challenge, user, {}),
+      activeChallengeIds: user.activeChallengeIds,
+    };
   }
 
   // Completes an active challenge, awards XP, and bumps the completion counter.
@@ -166,6 +202,12 @@ export class ChallengesService {
     user.activeChallengeIds = user.activeChallengeIds.filter(
       (id) => id !== challenge.id,
     );
+    if (!user.completedChallengeIds) {
+      user.completedChallengeIds = [];
+    }
+    if (!user.completedChallengeIds.includes(challenge.id)) {
+      user.completedChallengeIds.push(challenge.id);
+    }
     user.xp += challenge.xpReward;
     user.level = levelFromXp(user.xp);
     user.challengesCompleted += 1;
@@ -173,7 +215,7 @@ export class ChallengesService {
     await user.save();
 
     return {
-      challenge: challenge.toJSON(),
+      challenge: this.withUserStatusAndPartners(challenge, user, {}),
       xpAwarded: challenge.xpReward,
       user: user.toJSON(),
     };

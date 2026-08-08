@@ -36,6 +36,12 @@ export class ChallengesController {
     return this.challengesService.create(dto);
   }
 
+  @Get('completed')
+  @ApiOperation({ summary: 'Get all challenges completed by the current user' })
+  findCompleted(@CurrentUser('userId') userId: string) {
+    return this.challengesService.findCompletedForUser(userId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single challenge by id' })
   findOne(@CurrentUser('userId') userId: string, @Param('id') id: string) {
