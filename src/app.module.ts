@@ -13,6 +13,7 @@ import { MemoriesModule } from './memories/memories.module';
 import { MatchModule } from './match/match.module';
 import { HomeModule } from './home/home.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     MatchModule,
     HomeModule,
     NotificationsModule,
+    ReviewsModule,
   ],
   providers: [
     {
