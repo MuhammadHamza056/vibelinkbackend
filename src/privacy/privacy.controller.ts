@@ -162,16 +162,152 @@ export class PrivacyController {
         <h2>5. Security of Your Information</h2>
         <p>We implement industry-standard technical and organizational security measures (including password hashing and HTTPS encryption) to protect your data from unauthorized access, disclosure, or destruction.</p>
 
-        <h2>6. Children's Privacy</h2>
+        <h2>6. Child Sexual Abuse and Exploitation (CSAE) Standards</h2>
+        <p>VibeLink maintains a strict zero-tolerance policy regarding Child Sexual Abuse Material (CSAM) and Child Sexual Abuse and Exploitation (CSAE). For detailed standards, prevention measures, and reporting protocols, please review our public <a href="/api/privacy-policy/csae-policy">Child Safety & CSAE Policy</a>.</p>
+
+        <h2>7. Children's Privacy</h2>
         <p>VibeLink is intended for individuals aged 13 and older. We do not knowingly collect personal information from children under 13.</p>
 
-        <h2>7. Changes to This Privacy Policy</h2>
+        <h2>8. Changes to This Privacy Policy</h2>
         <p>We may update our Privacy Policy periodically. Any changes will be posted on this page with an updated revision date.</p>
 
-        <h2>8. Contact Us</h2>
+        <h2>9. Contact Us</h2>
         <div class="contact-box">
-            <p>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact our support team at:</p>
+            <p>If you have any questions, concerns, or requests regarding this Privacy Policy or Child Safety, please contact our support team at:</p>
             <p><strong>Email:</strong> <a href="mailto:support@vibelink.app">support@vibelink.app</a></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  @Get('csae-policy')
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @ApiOperation({
+    summary: 'Public Standards against Child Sexual Abuse and Exploitation (CSAE) for Store compliance',
+  })
+  getCSAEPolicy(): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSAE Standards & Child Safety Policy - VibeLink</title>
+    <style>
+        :root {
+            --bg-color: #0f1020;
+            --card-bg: #16172b;
+            --text-color: #e7e7f0;
+            --muted-text: #a0a0c0;
+            --accent-color: #6C5CE7;
+            --danger-color: #ff4757;
+            --border-color: #2a2a44;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 12px;
+        }
+        h2 {
+            color: #ffffff;
+            font-size: 1.3rem;
+            margin-top: 28px;
+        }
+        p, li {
+            color: var(--muted-text);
+            font-size: 1rem;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .last-updated {
+            font-style: italic;
+            color: var(--muted-text);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .contact-box {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-top: 24px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/api/privacy-policy" class="back-link">&larr; Back to Privacy Policy</a>
+        <h1>Standards Against Child Sexual Abuse and Exploitation (CSAE)</h1>
+        <div class="last-updated">Last updated: August 8, 2026</div>
+
+        <p>VibeLink maintains a strict zero-tolerance policy towards any content, imagery, or behavior involving Child Sexual Abuse Material (CSAM) or Child Sexual Abuse and Exploitation (CSAE). We are dedicated to maintaining a safe digital environment and protecting minors from online harm.</p>
+
+        <h2>1. Prohibited Conduct and Content</h2>
+        <p>The following activities are strictly prohibited on VibeLink:</p>
+        <ul>
+            <li>Creating, uploading, sharing, storing, or transmitting Child Sexual Abuse Material (CSAM) or Child Sexual Exploitation and Abuse (CSAE) in any form.</li>
+            <li>Grooming, soliciting, exploiting, or attempting to contact minors for sexual purposes.</li>
+            <li>Encouraging, facilitating, or linking to third-party services that host CSAM/CSAE content.</li>
+        </ul>
+
+        <h2>2. Detection and Moderation</h2>
+        <p>To enforce these standards and prevent illegal abuse, VibeLink utilizes a combination of enforcement mechanisms:</p>
+        <ul>
+            <li><strong>Automated Screening & Hashing:</strong> Media uploads and content are screened for illegal abuse material and prohibited indicators.</li>
+            <li><strong>User Reporting Systems:</strong> In-app reporting tools allow users to immediately flag suspicious profiles, messages, photos, or activities for review.</li>
+            <li><strong>Proactive Review:</strong> Moderation workflows analyze reported content promptly to remove violative content and suspend offenders.</li>
+        </ul>
+
+        <h2>3. Reporting and Law Enforcement Cooperation</h2>
+        <p>When CSAM or CSAE activity is detected or verified on our platform:</p>
+        <ul>
+            <li>The offending user account is immediately suspended and permanently banned.</li>
+            <li>All associated data and content are preserved as necessary for legal reporting.</li>
+            <li>VibeLink reports CSAM/CSAE violations to the National Center for Missing & Exploited Children (NCMEC) CyberTipline and relevant international law enforcement agencies in compliance with applicable law.</li>
+        </ul>
+
+        <h2>4. How to Report a Violation</h2>
+        <p>If you discover any content or user behavior on VibeLink that violates our CSAE standards, please report it immediately using in-app options or contact our dedicated child safety point of contact:</p>
+        <div class="contact-box">
+            <p><strong>Child Safety & Abuse Reporting Email:</strong> <a href="mailto:safety@vibelink.app">safety@vibelink.app</a></p>
+            <p><strong>General Support:</strong> <a href="mailto:support@vibelink.app">support@vibelink.app</a></p>
         </div>
     </div>
 </body>
