@@ -14,6 +14,7 @@ import { MatchModule } from './match/match.module';
 import { HomeModule } from './home/home.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { PrivacyModule } from './privacy/privacy.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     HomeModule,
     NotificationsModule,
     ReviewsModule,
+    PrivacyModule,
   ],
   providers: [
     {

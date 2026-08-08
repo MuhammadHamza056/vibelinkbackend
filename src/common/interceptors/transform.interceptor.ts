@@ -33,6 +33,11 @@ export class TransformInterceptor<T>
     }
 
     const response = http.getResponse<Response>();
+    const contentType = response.getHeader('content-type');
+    if (typeof contentType === 'string' && contentType.includes('text/html')) {
+      return next.handle();
+    }
+
     return next.handle().pipe(
       map((data) => ({
         statusCode: response.statusCode,
