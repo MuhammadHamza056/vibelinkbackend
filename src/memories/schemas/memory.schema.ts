@@ -23,6 +23,8 @@ export class Memory {
 
 export const MemorySchema = SchemaFactory.createForClass(Memory);
 
+MemorySchema.index({ userId: 1, createdAt: -1 });
+
 MemorySchema.set('toJSON', {
   virtuals: true,
   versionKey: false,
@@ -31,3 +33,4 @@ MemorySchema.set('toJSON', {
     delete ret._id;
   },
 });
+

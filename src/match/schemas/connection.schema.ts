@@ -31,6 +31,9 @@ export const ConnectionSchema = SchemaFactory.createForClass(Connection);
 
 // Prevent two rows for the same direction (requester -> recipient).
 ConnectionSchema.index({ requester: 1, recipient: 1 }, { unique: true });
+ConnectionSchema.index({ requester: 1, status: 1, updatedAt: -1 });
+ConnectionSchema.index({ recipient: 1, status: 1, updatedAt: -1 });
+ConnectionSchema.index({ status: 1, sharedChallengeId: 1 });
 
 ConnectionSchema.set('toJSON', {
   virtuals: true,
@@ -40,3 +43,4 @@ ConnectionSchema.set('toJSON', {
     delete ret._id;
   },
 });
+
