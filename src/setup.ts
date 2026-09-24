@@ -1,15 +1,16 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { mkdirSync } from 'fs';
+import { join } from 'path';
+import { AVATAR_DIR } from './profile/avatar-upload.config';
+import { MEMORY_DIR } from './memories/memory-upload.config';
 
 /**
  * Shared application configuration applied in every environment.
  *
  * Used by both the local entry point (`main.ts`) and the Vercel serverless
  * handler (`api/index.js`) so the two never drift apart.
- *
- * Note: static asset serving for `./uploads` lives only in `main.ts` because
- * Vercel's filesystem is read-only (disk-based avatar uploads don't work there).
  */
 export function configureApp(app: NestExpressApplication) {
   app.setGlobalPrefix('api');
@@ -62,3 +63,13 @@ export function configureApp(app: NestExpressApplication) {
     ],
   });
 }
+
+/**
+ * Configures static asset serving for local / persistent server hosts.
+ */
+export function configureStaticAssets(app: NestExpressApplication) {
+  mkdirSync(join(process.cwd(), AVATAR_DIR), { recursive: true });
+  mkdirSync(join(process.cwd(), MEMORY_DIR), { recursive: true });
+  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads/' });
+}
+

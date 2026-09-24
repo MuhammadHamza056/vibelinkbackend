@@ -1,15 +1,15 @@
 {
   "name": "vibelink-backend",
   "version": "0.1.0",
-  "description": "VibeLink backend API — NestJS + MongoDB",
+  "description": "VibeLink backend API \u2014 NestJS + MongoDB",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "build": "node init && nest build",
+    "start": "node init && nest start",
+    "start:dev": "node init && nest start --watch",
+    "start:prod": "node init && node dist/main",
     "seed": "ts-node -r tsconfig-paths/register src/seed/seed.ts",
     "tunnel": "node scripts/tunnel.js"
   },

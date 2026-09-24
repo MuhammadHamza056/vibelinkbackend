@@ -19,8 +19,8 @@ import { PrivacyModule } from './privacy/privacy.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
-    // Default limit for auth routes: 5 requests per 30s window.
-    ThrottlerModule.forRoot([{ ttl: 30_000, limit: 5 }]),
+    // Global rate limit: 120 requests per 60s window for standard API usage.
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
