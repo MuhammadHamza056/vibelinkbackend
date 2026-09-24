@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
 import { Memory, MemoryDocument } from './schemas/memory.schema';
 import { CreateMemoryDto } from './dto/create-memory.dto';
-import { MEMORY_URL_PREFIX, UploadedImage } from './memory-upload.config';
+import { MEMORY_DIR, MEMORY_URL_PREFIX, UploadedImage } from './memory-upload.config';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -53,7 +55,17 @@ export class MemoriesService {
       .findOneAndDelete({ _id: id, userId: new Types.ObjectId(userId) })
       .exec();
     if (!res) throw new NotFoundException('Memory not found');
+
+    if (res.imageUrl && res.imageUrl.startsWith(MEMORY_URL_PREFIX)) {
+      const filename = res.imageUrl.replace(`${MEMORY_URL_PREFIX}/`, '');
+      const filePath = join(process.cwd(), MEMORY_DIR, filename);
+      unlink(filePath).catch(() => {
+        // Silently ignore if file doesn't exist on disk
+      });
+    }
+
     await this.usersService.incrementCounters(userId, { memoriesCount: -1 });
     return { deleted: true, id };
   }
 }
+

@@ -179,12 +179,7 @@ export class ChallengesService {
   // Marks a challenge active for the user (tracked on the user doc).
   async start(userId: string, challengeId: string) {
     const challenge = await this.findById(challengeId);
-    const user = await this.usersService.findById(userId);
-    if (user.activeChallengeIds.includes(challenge.id)) {
-      throw new BadRequestException('Challenge already in progress');
-    }
-    user.activeChallengeIds.push(challenge.id);
-    await user.save();
+    const user = await this.usersService.startChallenge(userId, challenge.id);
     return {
       challenge: this.withUserStatusAndPartners(challenge, user, {}),
       activeChallengeIds: user.activeChallengeIds,
@@ -194,25 +189,11 @@ export class ChallengesService {
   // Completes an active challenge, awards XP, and bumps the completion counter.
   async complete(userId: string, challengeId: string) {
     const challenge = await this.findById(challengeId);
-    const user = await this.usersService.findById(userId);
-    if (!user.activeChallengeIds.includes(challenge.id)) {
-      throw new BadRequestException('Challenge is not active for this user');
-    }
-
-    user.activeChallengeIds = user.activeChallengeIds.filter(
-      (id) => id !== challenge.id,
+    const user = await this.usersService.completeChallenge(
+      userId,
+      challenge.id,
+      challenge.xpReward,
     );
-    if (!user.completedChallengeIds) {
-      user.completedChallengeIds = [];
-    }
-    if (!user.completedChallengeIds.includes(challenge.id)) {
-      user.completedChallengeIds.push(challenge.id);
-    }
-    user.xp += challenge.xpReward;
-    user.level = levelFromXp(user.xp);
-    user.challengesCompleted += 1;
-    user.lastActiveDate = new Date();
-    await user.save();
 
     return {
       challenge: this.withUserStatusAndPartners(challenge, user, {}),

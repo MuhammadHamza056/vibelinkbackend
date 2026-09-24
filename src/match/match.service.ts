@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -210,17 +211,25 @@ export class MatchService {
       };
     }
 
-    const created = await this.connectionModel.create({
-      requester: me,
-      recipient: them,
-      status: ConnectionStatus.pending,
-    });
-    return {
-      status: created.status,
-      connectionId: created.id,
-      user: this.summarize(target),
-    };
+    try {
+      const created = await this.connectionModel.create({
+        requester: me,
+        recipient: them,
+        status: ConnectionStatus.pending,
+      });
+      return {
+        status: created.status,
+        connectionId: created.id,
+        user: this.summarize(target),
+      };
+    } catch (error: any) {
+      if (error?.code === 11000) {
+        throw new ConflictException('Request already sent or connection exists');
+      }
+      throw error;
+    }
   }
+
 
   // Marks a pending connection accepted, bumps matchesCount for both users, and
   // assigns a shared challenge for them to complete together. `acceptingUserId`

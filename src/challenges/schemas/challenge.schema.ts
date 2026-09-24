@@ -45,6 +45,8 @@ export class Challenge {
 
 export const ChallengeSchema = SchemaFactory.createForClass(Challenge);
 
+ChallengeSchema.index({ isActive: 1, category: 1, difficulty: 1, createdAt: -1 });
+
 ChallengeSchema.set('toJSON', {
   virtuals: true,
   versionKey: false,
@@ -53,3 +55,4 @@ ChallengeSchema.set('toJSON', {
     delete ret._id;
   },
 });
+
