@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
@@ -50,6 +50,58 @@ export class UsersService {
     return user;
   }
 
+  async startChallenge(userId: string, challengeId: string): Promise<UserDocument> {
+    const user = await this.userModel
+      .findOneAndUpdate(
+        { _id: userId, activeChallengeIds: { $ne: challengeId } },
+        { $push: { activeChallengeIds: challengeId } },
+        { new: true },
+      )
+      .exec();
+
+    if (!user) {
+      const existing = await this.findById(userId);
+      if (existing.activeChallengeIds.includes(challengeId)) {
+        throw new BadRequestException('Challenge already in progress');
+      }
+      return existing;
+    }
+    return user;
+  }
+
+  async completeChallenge(
+    userId: string,
+    challengeId: string,
+    xpReward: number,
+  ): Promise<UserDocument> {
+    const user = await this.findById(userId);
+    if (!user.activeChallengeIds.includes(challengeId)) {
+      throw new BadRequestException('Challenge is not active for this user');
+    }
+
+    const updatedXp = user.xp + xpReward;
+    const updatedLevel = levelFromXp(updatedXp);
+
+    const updatedUser = await this.userModel
+      .findOneAndUpdate(
+        { _id: userId, activeChallengeIds: challengeId },
+        {
+          $pull: { activeChallengeIds: challengeId },
+          $addToSet: { completedChallengeIds: challengeId },
+          $inc: { xp: xpReward, challengesCompleted: 1 },
+          $set: { level: updatedLevel, lastActiveDate: new Date() },
+        },
+        { new: true },
+      )
+      .exec();
+
+    if (!updatedUser) {
+      throw new BadRequestException('Challenge is not active for this user');
+    }
+
+    return updatedUser;
+  }
+
   async incrementCounters(
     id: string,
     counters: Partial<
@@ -59,3 +111,4 @@ export class UsersService {
     await this.userModel.updateOne({ _id: id }, { $inc: counters }).exec();
   }
 }
+
